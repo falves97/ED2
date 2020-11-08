@@ -6,15 +6,13 @@ import java.util.List;
 public class Sort {
 
     public static <T extends Comparable<T>> void insert(List<T> list) {
-        int i;
-        int j;
         T key;                      //variável que será comparada com as demais
 
-        for (i = 1; i < list.size(); i++) {
+        for (int i = 1; i < list.size(); i++) {
             //key recebe o valor de i e assim será comparada com todas as demais da lista
             key = list.get(i);
             //j ecebe o índice do elemento antecessor a key para iniciar as comparações
-            j = i - 1;
+            int j = i - 1;
 
             /*
             o laço compara se j chegou ao início da lista e se o elemento de índece j é
@@ -35,13 +33,11 @@ public class Sort {
 
     //métedo insert que utiliza um Comparator
     public static <T> void insert(List<T> list, Comparator<T> comparator) {
-        int i;
-        int j;
         T key;
 
-        for (i = 1; i < list.size(); i++) {
+        for (int i = 1; i < list.size(); i++) {
             key = list.get(i);
-            j = i - 1;
+            int j = i - 1;
 
             while (j >= 0 && comparator.compare(list.get(j), key) > 0) {
                 list.set(j + 1, list.get(j));
@@ -55,22 +51,20 @@ public class Sort {
     public static <T extends Comparable<T>> void select(List<T> list) {
         T aux;
         int key;
-        int i;
-        int j;
 
         /*
         laço percorre do início ao penúltimo elemento da lista para comparara com
         os elementos à direita de i
          */
 
-        for (i = 0; i < list.size() - 1; i++) {
+        for (int i = 0; i < list.size() - 1; i++) {
             key = i;
 
             /*
             após key receber i, o segundo laço compara o elemento de índice i com
             todos à sua direita, até achar o menor elemento comparado com ele
              */
-            for (j = i + 1; j < list.size(); j++) {
+            for (int j = i + 1; j < list.size(); j++) {
                 if (list.get(j).compareTo(list.get(key)) < 0) {
                     key = j;
                 }
@@ -91,13 +85,11 @@ public class Sort {
     public static <T> void select(List<T> list, Comparator<T> comparator) {
         T aux;
         int key;
-        int i;
-        int j;
 
-        for (i = 0; i < list.size() - 1; i++) {
+        for (int i = 0; i < list.size() - 1; i++) {
             key = i;
 
-            for (j = i + 1; j < list.size(); j++) {
+            for (int j = i + 1; j < list.size(); j++) {
                 if (comparator.compare(list.get(j), list.get(key)) < 0) {
                     key = j;
                 }
@@ -109,8 +101,55 @@ public class Sort {
         }
     }
 
-    public static void merge() {
+    public static <T extends Comparable<T>> void merge(List<T> a, List<T> b, int init, int last) {
+        int midle;
 
+        if (init < last) {
+            midle = (init + last) / 2;
+            merge(a, b, init, midle);
+            merge(a, b, midle + 1, last);
+            toMerge(a, b, init, midle, last);
+        }
+    }
+
+    public static <T extends Comparable<T>> void toMerge(List<T> a, List<T> b, int init, int middle, int last) {
+        int initA;
+        int initB;
+        int posFree;
+        int numElem;
+
+        initA = init;
+        initB = middle + 1;
+        posFree = init;
+        numElem = last - init + 1;
+
+        while (initA <= middle && initB <= last) {
+            if (a.get(initA).compareTo(a.get(initB)) <= 0) {
+                b.set(posFree, a.get(initA));
+                initA++;
+            }
+            else {
+                b.set(posFree, a.get(initB));
+                initB++;
+            }
+            posFree++;
+        }
+
+        while (initA <= middle) {
+            b.set(posFree, a.get(initA));
+            posFree++;
+            initA++;
+        }
+
+        while (initB <= last) {
+            b.set(posFree, a.get(initB));
+            posFree++;
+            initB++;
+        }
+
+        for (int i = 0; i < numElem; i++, last--) {
+            a.set(last, b.get(last));
+        }
     }
 
     public static void quick() {

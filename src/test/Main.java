@@ -2,7 +2,10 @@ package test;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import util.Sort;
 
 public class Main {
@@ -16,7 +19,9 @@ public class Main {
 
         System.out.println(list);
 
-        Sort.select(list, (x, y) -> x.compareTo(y));
+        List<Integer> b = new ArrayList<>(list);
+        b = b.stream().map(m -> m = 0).collect(Collectors.toList());
+        Sort.merge(list, b, 0, list.size() - 1);
 
         System.out.println(list);
     }
