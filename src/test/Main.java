@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import util.Sort;
 
@@ -14,14 +15,12 @@ public class Main {
         SecureRandom secureRandom = new SecureRandom();
 
         for (int i = 0; i < 10; i++) {
-            list.add(secureRandom.nextInt(100));
+            list.add(secureRandom.nextInt(100 - 90) + 90);
         }
 
         System.out.println(list);
 
-        List<Integer> b = new ArrayList<>(list);
-        b = b.stream().map(m -> m = 0).collect(Collectors.toList());
-        Sort.merge(list, b, 0, list.size() - 1);
+        Sort.quick(list,0, list.size() - 1);
 
         System.out.println(list);
     }
