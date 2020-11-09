@@ -1,27 +1,36 @@
 package test;
 
 import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import java.util.Scanner;
 
+import estructures.Node;
+import estructures.Tree;
 import util.Sort;
 
 public class Main {
     public static void main(String[] args) {
-        List<Integer> list = new ArrayList<>();
+        Tree<Integer> tree = new Tree<>();
+        Node<Integer> node;
         SecureRandom secureRandom = new SecureRandom();
+        Scanner input = new Scanner(System.in);
+        int j;
+        int[] values = {88, 85, 21, 79, 63, 65, 22, 80, 25, 48};
+
 
         for (int i = 0; i < 10; i++) {
-            list.add(secureRandom.nextInt(100 - 90) + 90);
+            node = new Node<>(values[i]);
+            tree.insert(node);
         }
 
-        System.out.println(list);
 
-        Sort.quick(list,0, list.size() - 1);
+        System.out.println();
+        tree.order(tree.getRoot());
+        System.out.println();
 
-        System.out.println(list);
+        System.out.println("Digite um valor a ser removido: ");
+        Integer value = input.nextInt();
+
+        tree.remove(tree.getRoot(), value);
+        tree.order(tree.getRoot());
     }
 }
