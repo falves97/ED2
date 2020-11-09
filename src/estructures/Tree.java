@@ -9,8 +9,8 @@ public class Tree <T extends Comparable<T>> {
         root = null;
     }
 
-    public Tree(Node<T> root) {
-        this.root = root;
+    public Tree(T value) {
+        this.root = new Node<>(value);
     }
 
     public Node<T> getRoot() {
@@ -19,6 +19,18 @@ public class Tree <T extends Comparable<T>> {
 
     public void setRoot(Node<T> root) {
         this.root = root;
+    }
+
+    public Node<T> search(Node<T> node, T vaulue) {
+        if(node != null) {
+            if (vaulue.compareTo(node.getValue()) < 0) {
+                return search(node.getLeft(), vaulue);
+            }
+            else if (vaulue.compareTo(node.getValue()) > 0) {
+                return search(node.getRight(), vaulue);
+            }
+        }
+        return node;
     }
 
     public void insert(Node<T> node) {

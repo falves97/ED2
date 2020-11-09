@@ -27,10 +27,10 @@ public class Main {
         tree.order(tree.getRoot());
         System.out.println();
 
-        System.out.println("Digite um valor a ser removido: ");
+        System.out.println("Digite um valor a ser achado: ");
         Integer value = input.nextInt();
 
-        tree.remove(tree.getRoot(), value);
-        tree.order(tree.getRoot());
+        node = tree.search(tree.getRoot(), value);
+        System.out.println("achado: " + node);
     }
 }
