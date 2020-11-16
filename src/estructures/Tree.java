@@ -1,5 +1,6 @@
 package estructures;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class Tree <T extends Comparable<T>> {
@@ -17,8 +18,8 @@ public class Tree <T extends Comparable<T>> {
         return root;
     }
 
-    public void setRoot(Node<T> root) {
-        this.root = root;
+    public Node<T> search(T value) {
+        return search(root, value);
     }
 
     public Node<T> search(Node<T> node, T vaulue) {
@@ -33,34 +34,72 @@ public class Tree <T extends Comparable<T>> {
         return node;
     }
 
-    public void insert(Node<T> node) {
+    public void insert(Node<T> root, T value) {
         if (root == null) {
-            setRoot(node);
+            root = new Node<>(value);
         }
         else {
-            root.insert(node.getValue());
+            if (value.compareTo(root.getValue()) < 0) {
+                insert(root.getLeft(), value);
+            }
+            else {
+                insert(root.getRight(), value);
+            }
         }
     }
 
-    public Node<T> remove(Node<T> node, T value) {
-        if (value.compareTo(node.getValue()) < 0) {
-            node.setLeft(remove(node.getLeft(), value));
-        }
-        else if (value.compareTo(node.getValue()) > 0) {
-            node.setRight(remove(node.getRight(), value));
-        }
-        else {
-            if (node.getLeft() == null) {
-                return node.getRight();
-            } else if (node.getRight() == null) {
-                return node.getLeft();
-            } else {
-                Node<T> n = min(node.getRight());
-                n.setLeft(node.getLeft());
-                return node.getRight();
+    public Node<T> remove(T value) {
+        Node<T> father;
+        Node<T> current;
+        boolean finded;
+
+        father = null;
+        current = root;
+        finded = false;
+
+        while (current != null && !finded) {
+            if (value.compareTo(current.getValue()) != 0){
+                father = current;
+                if (value.compareTo(current.getValue()) < 0) {
+                    current = current.getLeft();
+                }
+                else if (value.compareTo(current.getValue()) > 0) {
+                    current = current.getRight();
+                }
+            }
+            else {
+                finded = true;
             }
         }
-        return node;
+
+        if (finded) {
+            if (father == null) {
+                root = null;
+            }
+            else {
+                Node<T> aux;
+
+                if (current.getLeft() == null) {
+                    aux = current.getRight();
+                }
+                else if (current.getRight() == null) {
+                    aux = current.getLeft();
+                }
+                else {
+                    aux = min(current.getRight());
+                    aux.setLeft(current.getLeft());
+                }
+
+                if (father.getLeft() == current) {
+                    father.setLeft(aux);
+                }
+                else {
+                    father.setRight(aux);
+                }
+            }
+        }
+
+        return current;
     }
 
     public Node<T> min(Node<T> node) {
@@ -77,12 +116,15 @@ public class Tree <T extends Comparable<T>> {
         return node;
     }
 
-    public void order(Node<T> node) {
+    public void order() {
+        order(root);
+    }
 
-        if (node != null) {
-            order(node.getLeft());
-            System.out.print(node.getValue().toString() + " ");
-            order(node.getRight());
+    public void order(Node<T> root) {
+        if (root != null) {
+            order(root.getLeft());
+            System.out.print(root.getValue() + " ");
+            order(root.getRight());
         }
     }
 

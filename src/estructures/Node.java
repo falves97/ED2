@@ -40,28 +40,6 @@ public class Node<T extends Comparable<T>> {
         this.right = right;
     }
 
-    public void insert(T value) {
-        if (this.value == null) {
-            this.value = value;
-        }
-        else if (value.compareTo(this.value) < 0) {
-            if (left == null) {
-                setLeft(new Node<>(value));
-            }
-            else {
-                left.insert(value);
-            }
-        }
-        else {
-            if (right == null) {
-                setRight(new Node<>(value));
-            }
-            else {
-                right.insert(value);
-            }
-        }
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
