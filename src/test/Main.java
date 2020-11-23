@@ -1,34 +1,26 @@
 package test;
 
-import estructures.List;
+import estructures.BinaryTree;
 import estructures.Node;
-import estructures.Tree;
 
 import java.security.SecureRandom;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        Tree<Integer> integerTree = new Tree<>();
+        BinaryTree<Integer> integerTree = new BinaryTree<>();
+        int[] values = {95, 30, 25, 98, 76, 99, 37, 46, 58, 62};
         SecureRandom random = new SecureRandom();
         Scanner input = new Scanner(System.in);
         int value;
 
         for (int i = 0; i < 10; i++) {
-            value = random.nextInt(100);
-            System.out.print(value + " ");
-            integerTree.insert(integerTree.getRoot(), value);
+            integerTree.insert(values[i]);
         }
-
+        integerTree.order(integerTree.getRoot());
         System.out.println();
-        integerTree.order();
-
-        System.out.println();
-        System.out.print("Digite valor a ser removido: ");
-        value = input.nextInt();
-        Node<Integer> node = integerTree.remove(value);
-
-        integerTree.order();
-        System.out.println("Valor removido: " + node);
+        Node<Integer> root = integerTree.remove(99);
+        integerTree.order(integerTree.getRoot());
     }
 }

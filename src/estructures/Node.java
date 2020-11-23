@@ -5,23 +5,35 @@ import java.util.Objects;
 
 public class Node<T extends Comparable<T>> {
     private T value;
+    private Node<T> father;
     private Node<T> left;
     private Node<T> right;
 
     public Node() {
-        value = null;
-        left = null;
-        right = null;
+        this(null);
     }
 
     public Node(T value) {
         this.value = value;
-        this.left = null;
-        this.right = null;
+        father = null;
+        left = null;
+        right = null;
     }
 
     public T getValue() {
         return value;
+    }
+
+    public void setValue(T value) {
+        this.value = value;
+    }
+
+    public Node<T> getFather() {
+        return father;
+    }
+
+    public void setFather(Node<T> father) {
+        this.father = father;
     }
 
     public Node<T> getLeft() {
@@ -46,19 +58,20 @@ public class Node<T extends Comparable<T>> {
         if (!(o instanceof Node)) return false;
         Node<?> node = (Node<?>) o;
         return Objects.equals(getValue(), node.getValue()) &&
+                Objects.equals(getFather(), node.getFather()) &&
                 Objects.equals(getLeft(), node.getLeft()) &&
                 Objects.equals(getRight(), node.getRight());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getValue(), getLeft(), getRight());
+        return Objects.hash(getValue(), getFather(), getLeft(), getRight());
     }
 
     @Override
     public String toString() {
         return "Node{" +
-                "value=" + value.toString() +
+                "value=" + value +
                 '}';
     }
 }
