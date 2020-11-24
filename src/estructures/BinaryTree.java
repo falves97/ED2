@@ -82,21 +82,21 @@ public class BinaryTree<T extends Comparable<T>> {
                 Node<T> son;
 
                 if (root.getLeft() == null && root.getRight() == null) {
-                    son = null;
+                    return null;
                 }
                 else if (root.getLeft() == null) {
                     son = root.getRight();
-                    son.setFather(root.getFather());
                 }
                 else if(root.getRight() == null) {
                     son = root.getLeft();
-                    son.setFather(root.getFather());
                 }
                 else {
                     son = min(root.getRight());
                     son.setLeft(root.getLeft());
+                    root.getLeft().setFather(son);
                     son = root.getRight();
                 }
+                son.setFather(root.getFather());
 
                 return son;
             }

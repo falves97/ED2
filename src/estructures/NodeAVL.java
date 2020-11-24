@@ -39,8 +39,8 @@ public class NodeAVL<T extends Comparable<T>> extends Node {
     @Override
     public String toString() {
         return "NodeAVL{" +
-                super.toString() +
-                "height=" + height +
+                "value=" + getValue() +
+                ", height=" + height +
                 '}';
     }
 }

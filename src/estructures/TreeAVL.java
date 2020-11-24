@@ -2,8 +2,8 @@ package estructures;
 
 import java.util.Objects;
 
-public class TreeAVL<T extends Comparable<T>>{
-    private NodeAVL<T> root;
+public class TreeAVL<T extends Comparable<T>> extends BinaryTree<T> {
+    private Node<T> root;
 
     public TreeAVL() {
         root = null;
@@ -13,41 +13,7 @@ public class TreeAVL<T extends Comparable<T>>{
         this.root = new NodeAVL<>(value);
     }
 
-    public NodeAVL<T> getRoot() {
-        return root;
-    }
-
-    public void insert(T value) {
-        root = insert(getRoot(), value);
-    }
-
-    public NodeAVL<T> insert(NodeAVL<T> root, T value) {
-        if (root != null) {
-
-            if (value.compareTo((T) root.getValue()) < 0) {
-                root.setLeft(insert((NodeAVL<T>) root.getLeft(), value));
-                if (height((NodeAVL<T>) root.getLeft()) - height((NodeAVL<T>) root.getRight()) == 2) {
-                    if (value.compareTo((T) root.getLeft().getValue()) < 0) {
-                        root = rightRotation(root);
-                    } else {
-                        root = doubleRightRotation(root);
-                    }
-                }
-            } else if (value.compareTo((T) root.getValue()) > 0) {
-                root.setRight(insert((NodeAVL<T>) root.getRight(), value));
-                if (height((NodeAVL<T>) root.getRight()) - height((NodeAVL<T>) root.getLeft()) == 2) {
-                    if (value.compareTo((T) root.getRight().getValue()) > 0) {
-                        root = leftRotation(root);
-                    } else {
-                        root = doubleLeftRotation(root);
-                    }
-                }
-            }
-            root.setHeight(Math.max(height((NodeAVL<T>) root.getLeft()), height((NodeAVL<T>) root.getRight())) + 1);
-        } else {
-            root = new NodeAVL<>(value);
-        }
-
+    public Node<T> getRoot() {
         return root;
     }
 
@@ -60,8 +26,15 @@ public class TreeAVL<T extends Comparable<T>>{
             aux = (NodeAVL) root.getRight();
             root.setRight(aux.getLeft());
             aux.setLeft(root);
-            root.setHeight(Math.max(height((NodeAVL<T>) root.getLeft()), height((NodeAVL<T>) root.getRight())) + 1);
-            aux.setHeight(Math.max(height((NodeAVL<T>) root.getLeft()), root.getHeight()) + 1);
+            aux.setFather(root.getFather());
+            root.setFather(aux);
+
+            if (root.getRight() != null) {
+                root.getRight().setFather(root);
+            }
+
+            root.setHeight(Math.max(this.height(root.getLeft()), this.height(root.getRight())) + 1);
+            aux.setHeight(Math.max(this.height(root.getLeft()), root.getHeight()) + 1);
         }
 
         return aux;
@@ -76,8 +49,15 @@ public class TreeAVL<T extends Comparable<T>>{
             aux = (NodeAVL) root.getLeft();
             root.setLeft(aux.getRight());
             aux.setRight(root);
-            root.setHeight(Math.max(height((NodeAVL<T>) root.getLeft()), height((NodeAVL<T>) root.getRight())) + 1);
-            aux.setHeight(Math.max(height((NodeAVL<T>) root.getLeft()), root.getHeight()) + 1);
+            aux.setFather(root.getFather());
+            root.setFather(aux);
+
+            if (root.getLeft() != null) {
+                root.getLeft().setFather(root);
+            }
+
+            root.setHeight(Math.max(this.height(root.getLeft()), this.height(root.getRight())) + 1);
+            aux.setHeight(Math.max(this.height(root.getLeft()), root.getHeight()) + 1);
         }
 
         return aux;
@@ -93,20 +73,76 @@ public class TreeAVL<T extends Comparable<T>>{
         return rightRotation(root);
     }
 
-    public int height(NodeAVL<T> root) {
-        if (root != null) {
-            return Math.max(height((NodeAVL<T>) root.getLeft()), height((NodeAVL<T>) root.getRight())) + 1;
-        } else {
-            return -1;
-        }
+    @Override
+    public void insert(T value) {
+        root = insert(root, value);
     }
 
-    public void order(NodeAVL<T> root) {
+    @Override
+    public Node<T> insert(Node<T> root, T value) {
         if (root != null) {
-            int balance = height((NodeAVL<T>) root);
-            order((NodeAVL<T>) root.getLeft());
-            System.out.print(root.getValue() + ":" + balance + " ");
-            order((NodeAVL<T>) root.getRight());
+
+            Node<T> son;
+
+            if (value.compareTo(root.getValue()) < 0) {
+
+                son = insert(root.getLeft(), value);
+                root.setLeft(son);
+
+                if (this.height(root.getLeft()) - this.height(root.getRight()) == 2) {
+                    if (value.compareTo((T) root.getLeft().getValue()) < 0) {
+                        root = rightRotation((NodeAVL<T>) root);
+                    } else {
+                        root = doubleRightRotation((NodeAVL<T>) root);
+                    }
+                }
+                else {
+                    son.setFather(root);
+                }
+            } else if (value.compareTo((T) root.getValue()) > 0) {
+
+                son = insert(root.getRight(), value);
+                root.setRight(son);
+
+                if (this.height(root.getRight()) - this.height(root.getLeft()) == 2) {
+                    if (value.compareTo((T) root.getRight().getValue()) > 0) {
+                        root = leftRotation((NodeAVL<T>) root);
+                    } else {
+                        root = doubleLeftRotation((NodeAVL<T>) root);
+                    }
+                }
+                else {
+                    son.setFather(root);
+                }
+            }
+
+            ((NodeAVL<T>) root).setHeight(Math.max(this.height(root.getLeft()), this.height(root.getRight())) + 1);
+        } else {
+            root = new NodeAVL<>(value);
+        }
+
+        order(root);
+        System.out.println();
+        return root;
+    }
+
+    @Override
+    public int height(Node<T> root) {
+        if (root != null) {
+            if (root instanceof NodeAVL) {
+                NodeAVL<T> aux = (NodeAVL<T>) root;
+                return aux.getHeight();
+            }
+        }
+        return -1;
+    }
+
+    @Override
+    public void order(Node<T> root) {
+        if (root != null) {
+            order(root.getLeft());
+            System.out.print(((NodeAVL) root) + " ");
+            order(root.getRight());
         }
     }
 
